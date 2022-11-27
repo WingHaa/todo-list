@@ -6,10 +6,14 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
   },
   plugins: [new HtmlWebpackPlugin()],
   devtool: 'inline-source-map',
+  devServer: {
+    static: './dist',
+    watchContentBase: true,
+  },
   module: {
     rules: [
       {
@@ -18,5 +22,11 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
+  },
+  optimization: {
+    runtimeChunk: 'single',
+  },
+  output: {
+    clean: true,
   },
 }
