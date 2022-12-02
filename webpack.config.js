@@ -11,8 +11,7 @@ module.exports = {
   plugins: [new HtmlWebpackPlugin()],
   devtool: 'inline-source-map',
   devServer: {
-    static: './dist',
-    watchContentBase: true,
+    static: path.resolve(__dirname, 'src'),
   },
   module: {
     rules: [
