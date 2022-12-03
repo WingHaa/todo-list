@@ -1,5 +1,9 @@
-import { container } from "webpack";
-import { pubsub } from "../pubsub";
+import {
+  pubsub
+} from "../index";
+import InboxIcon from '../img/mail.png';
+import TodayIcon from '../img/calendar.png';
+import UpcomingIcon from '../img/planner.png';
 
 export const navSideBar = {
   render: container => {
@@ -13,9 +17,9 @@ export const navSideBar = {
     main.appendChild(sideBar);
 
     const mainFilters = {
-      Inbox: '/img/mail.png',
-      Today: '/img/calendar.png',
-      Upcoming: '/img/planner.png'
+      Inbox: InboxIcon,
+      Today: TodayIcon,
+      Upcoming: UpcomingIcon
     };
 
     for (const [filter, imgPath] of Object.entries(mainFilters)) {
@@ -55,9 +59,13 @@ export const navSideBar = {
 
     pubsub.add('toggleNavSideBar', navSideBar.toggleNavSideBar);
   },
-  toggleNavSideBar: function() {
+  toggleNavSideBar: () => {
     const sideBar = document.querySelector('.side-bar');
-    sideBar.style.display = !sideBar.style.display;
+    if (sideBar.style.display !== 'none') {
+      sideBar.style.display = 'none';
+    } else {
+      sideBar.style.display = 'block';
+    }
   }
 }
 
