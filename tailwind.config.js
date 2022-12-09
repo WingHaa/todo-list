@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     "./src/*.{html,js}",
+    "./src/**/*.{html,js}",
     "./dist/*.{html,js}",
   ],
   theme: {
@@ -19,13 +20,21 @@ module.exports = {
         'top-bar': '#0b2239',
         'nav-side-bar': '#ebf8fe',
         'item-hover': '#b4e2f7',
-        'priority-high':'#FF0000',
-        'priority-med':'#0000FF',
-        'priority-low':'#00FF00',
+        'priority-high': '#FF0000',
+        'priority-med': '#0000FF',
+        'priority-low': '#00FF00',
       },
     },
   },
   plugins: [
     require('@tailwindcss/forms'),
   ],
-}
+  safelist: [{
+    pattern: /(bg|text|border)-priority-(high|med|low)/
+  },
+  {
+    pattern: /(shadow)-checkbox-(high|med|low)/,
+    variants: ['before'],
+  }
+  ],
+};
