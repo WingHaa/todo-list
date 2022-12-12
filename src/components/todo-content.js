@@ -21,6 +21,7 @@ export const todoContent = {
 
       const checkbox = document.createElement('input')
       checkbox.type = 'checkbox';
+      checkbox.id = 'todo-complete-toggle';
       checkbox.classList = `check-box border-priority-${todo.priority} hover:border-item-hover before:shadow-checkbox-${todo.priority} before:check-mark before:scale-0 before:checked:scale-100`;
       checkbox.checked = todo.complete;
 
@@ -69,6 +70,10 @@ export const todoContent = {
   },
   handleClick: (ev) => {
     const request = ev.target.id;
+    if (request == 'todo-complete-toggle') {
+      const query = ev.target.closest('.todo-item').dataset.todoId
+      return pubsub.emit('todoToggleCompletion', query);
+    };
     if (request == 'todo-edit') {
       const query = ev.target.closest('.todo-item').dataset.todoId
       return console.log(query)

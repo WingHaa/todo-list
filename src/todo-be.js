@@ -55,6 +55,7 @@ export const todoModule = {
     pubsub.add('queryTodo', todoModule.getTodo);
     pubsub.add('todoCreation', todoModule.createTodo);
     pubsub.add('todoDeletion', todoModule.deleteTodo);
+    pubsub.add('todoToggleCompletion', todoModule.toggle);
   },
   createTodo: (form) => {
     const todo = new Todo(form);
@@ -63,7 +64,7 @@ export const todoModule = {
     todo.todoId = latestTodo?.todoId + 1 || 1;
     /* beautify preserve:end */
     todoModule.todos.push(todo);
-    pubsub.emit('todoCreated', [ todo ]);
+    pubsub.emit('todoCreated', [todo]);
   },
   getTodo: (request) => {
     let result = [];
@@ -102,5 +103,11 @@ export const todoModule = {
     return todoModule.todos = todoModule.todos.filter(todo =>
       todo.projectId != request.projectId &&
       todo.todoId != request.todoId);
+  },
+  toggle: (id) => {
+    todoModule.todos.map(todo => {
+      if (todo.todoId == 1) todo.complete = !todo.complete;
+    });
+  console.log(todoModule.todos)
   },
 }

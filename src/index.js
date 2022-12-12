@@ -1,7 +1,7 @@
 /* beautify preserve:start */
 import './style.css';
-import { projectModule } from './project';
-import { todoModule } from './todo';
+import { projectModule } from './project-be';
+import { todoModule } from './todo-be';
 import { header } from './components/site-header';
 import { navSideBar } from './components/side-nav-bar';
 import { projectHeader } from './components/project-header';
@@ -14,7 +14,7 @@ import { todoContent } from './components/todo-content';
 import { todoFooter } from './components/todo-footer';
 import { projectModal } from './components/add-project-modal';
 import { todoModal } from './components/add-todo-modal';
-import { confirmDeletionModal } from './components/confirmation';
+import { confirmDeletionModal } from './components/delete-confirmation';
 /* beautify preserve:end */
 
 window.addEventListener('DOMContentLoaded', renderHomePage);

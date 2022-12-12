@@ -66,6 +66,7 @@ export const projectModule = {
       }
     };
     pubsub.emit('todoDeletion', {
+      // sending type so todo be know it is project related deletion
       type: 'project',
       projectId: id
     })
