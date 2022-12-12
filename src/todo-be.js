@@ -95,7 +95,7 @@ export const todoModule = {
       return todoModule.todos = todoModule.todos.filter(todo =>
         todo.projectId != request.projectId);
     };
-    if (!request.projectId) {
+    if (request.type == 'todo') {
       return todoModule.todos = todoModule.todos.filter(todo =>
         todo.todoId != request.todoId);
     };
