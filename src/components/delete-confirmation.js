@@ -1,6 +1,6 @@
-import {
-  pubsub
-} from "../index";
+/* beautify preserve:start */
+import { pubsub } from "../index";
+/* beautify preserve:end */
 
 export const confirmDeletionModal = {
   init: () => {
@@ -19,17 +19,18 @@ export const confirmDeletionModal = {
 
     const header = document.createElement('h2');
     header.classList = 'text-center font-bold text-2xl';
-    if (request.type == 'project') {
-    header.textContent = `Are you sure you want to delete ${request.name}? All todos associated with ${request.name} will get delete too.`;
+    if (request.type == 'project-delete') {
+      header.textContent = `Are you sure you want to delete ${request.name}? All todos associated with ${request.name} will get delete too.`;
     } else {
-    header.textContent = `Are you sure you want to delete ${request.name}`;
+      header.textContent = `Are you sure you want to delete ${request.name}`;
     }
 
     const buttonDiv = document.createElement('div');
     buttonDiv.classList = 'flex justify-end pt-10';
     const cancelButton = document.createElement('button');
     cancelButton.classList = 'text-2xl border-2 px-4 py-3 ml-6 font-bold';
-    cancelButton.textContent = 'Cancel'; cancelButton.addEventListener('pointerdown', confirmDeletionModal.closeModal);
+    cancelButton.textContent = 'Cancel';
+    cancelButton.addEventListener('pointerdown', confirmDeletionModal.closeModal);
     const confirmButton = document.createElement('button');
     confirmButton.classList = 'text-2xl border-2 px-4 py-3 ml-6 font-bold bg-blue-600 text-white disabled:bg-blue-200';
     confirmButton.id = 'submit';
@@ -56,7 +57,10 @@ export const confirmDeletionModal = {
     ev.preventDefault();
     request.element.remove();
     confirmDeletionModal.closeModal(ev);
-    if (request.type == 'project') pubsub.emit('projectDeletion', request.projectId);
-    // if (request.type == 'todo')
+    if (request.type == 'project-delete') return pubsub.emit('projectDeletion', request.projectId);
+    if (request.type == 'todo-delete') return pubsub.emit('todoDeletion', {
+      type: 'todo',
+      todoId: request.todoId,
+    });
   },
 };
