@@ -42,6 +42,7 @@ export const todoContent = {
       edit.classList = 'todo-edit';
       const editIcon = document.createElement('img');
       editIcon.classList = 'w-10 hover:bg-item-hover';
+      editIcon.id = 'todo-edit';
       editIcon.src = EditIcon;
       edit.appendChild(editIcon);
 
@@ -49,10 +50,11 @@ export const todoContent = {
       deleteTodoButton.classList = 'todo-delete';
       const delIcon = document.createElement('img');
       delIcon.classList = 'w-10 hover:bg-item-hover';
+      delIcon.id = 'todo-delete';
       delIcon.src = DelIcon;
       deleteTodoButton.appendChild(delIcon);
-      deleteTodoButton.addEventListener('pointerdown', todoContent.deleteTodo)
 
+      todoContainer.addEventListener('pointerdown', todoContent.handleClick)
       todoContainer.appendChild(checkbox);
       todoContainer.appendChild(title);
       todoContainer.appendChild(deadline);
@@ -64,11 +66,33 @@ export const todoContent = {
     });
   },
   deleteTodo: (ev) => {
-    const projectId = ev.target.closest('.todo-item').getAttribute('projectId');
-    const todoId = ev.target.closest('.todo-item').getAttribute('todoId');
-    pubsub.emit('todoDeletion', {
-      projectId: projectId,
+  },
+  handleClick: (ev) => {
+    const request = ev.target.id;
+    if (request == 'todo-edit') {
+      const query = ev.target.closest('.todo-item').dataset.todoId
+      return console.log(query)
+    };
+    if (request == 'todo-delete') {
+    const todoElement = ev.target.closest('.todo-item');
+    const todoName = todoElement.querySelector('.title').textContent;
+    console.log(todoName)
+    // const projectId = todoElement.dataset.projectId;
+    const todoId = todoElement.dataset.todoId;
+    return pubsub.emit('confirmDeleteData', {
+      type: request,
+      name: todoName,
+      // projectId: projectId,
       todoId: todoId,
-    })
-  }
+      element: todoElement,
+    });
+    } else {
+      const query = ev.target.closest('.project-item').dataset.projectId
+      pubsub.emit('queryProject', {
+        type: 'single',
+        projectId: query
+      });
+      pubsub.emit('serveTodoFooter');
+    }
+  },
 };
