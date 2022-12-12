@@ -7,6 +7,7 @@ export const projectContent = {
   init: () => {
     pubsub.add('serveProjectBody', projectContent.render);
     pubsub.add('projectCreated', projectContent.render);
+    pubsub.add('projectModification', projectContent.modifyProject);
   },
   render: projects => {
     if (projects.length < 1) return;
@@ -46,16 +47,24 @@ export const projectContent = {
     });
   },
   handleClick: (ev) => {
-    if (ev.target.id == 'project-edit') {
+    const request = ev.target.id;
+    if (request == 'project-edit') {
+      const projectElement = ev.target.closest('.project-item');
       const query = ev.target.closest('.project-item').dataset.projectId
-      return console.log(query)
+      const projectName = ev.target.closest('div div').textContent;
+      return pubsub.emit('modifyDataRequest', {
+        type: request,
+        name: projectName,
+        projectId: query,
+        element: projectElement
+      });
     };
-    if (ev.target.id == 'project-delete') {
+    if (request == 'project-delete') {
       const projectElement = ev.target.closest('.project-item');
       const projectId = projectElement.dataset.projectId;
       const projectName = ev.target.closest('div div').textContent;
       return pubsub.emit('confirmDeleteData', {
-        type: 'project',
+        type: request,
         name: projectName,
         projectId: projectId,
         element: projectElement
@@ -68,5 +77,9 @@ export const projectContent = {
       });
       pubsub.emit('serveTodoFooter');
     }
+  },
+  modifyProject: (request) => {
+    const name = request.element.querySelector('.text-lg');
+    name.textContent = request.name;
   },
 };

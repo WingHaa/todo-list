@@ -15,6 +15,7 @@ import { todoFooter } from './components/todo-footer';
 import { projectModal } from './components/add-project-modal';
 import { todoModal } from './components/add-todo-modal';
 import { confirmDeletionModal } from './components/delete-confirmation';
+import { modificationModal } from './components/modify-data';
 /* beautify preserve:end */
 
 window.addEventListener('DOMContentLoaded', renderHomePage);
@@ -38,6 +39,7 @@ function renderHomePage() {
   projectModal.init();
   todoModal.init();
   confirmDeletionModal.init();
+  modificationModal.init();
 
   pubsub.emit('serveInboxHeader')
   pubsub.emit('queryTodo', {projectId: 'inbox'})

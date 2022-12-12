@@ -57,10 +57,12 @@ export const confirmDeletionModal = {
     ev.preventDefault();
     request.element.remove();
     confirmDeletionModal.closeModal(ev);
-    if (request.type == 'project-delete') return pubsub.emit('projectDeletion', request.projectId);
-    if (request.type == 'todo-delete') return pubsub.emit('todoDeletion', {
-      type: 'todo',
-      todoId: request.todoId,
-    });
+    if (request.type == 'project-delete')
+      return pubsub.emit('projectDeletion', request.projectId);
+    if (request.type == 'todo-delete')
+      return pubsub.emit('todoDeletion', {
+        type: 'todo',
+        todoId: request.todoId,
+      });
   },
 };

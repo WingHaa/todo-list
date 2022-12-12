@@ -27,6 +27,7 @@ export const projectModule = {
   init: () => {
     pubsub.add('projectCreation', projectModule.createProject);
     pubsub.add('projectDeletion', projectModule.deleteProject);
+    pubsub.add('projectModification', projectModule.editProject);
     pubsub.add('queryProject', projectModule.getProject);
   },
   createProject: (form) => {
@@ -70,5 +71,13 @@ export const projectModule = {
       type: 'project',
       projectId: id
     })
+  },
+  editProject: (request) => {
+    const id = request.projectId;
+    projectModule.projects.map(project => {
+      if (project.id == id) {
+        project.name = request.name;
+      };
+    });
   },
 };
