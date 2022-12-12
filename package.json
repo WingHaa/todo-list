@@ -26,6 +26,7 @@
     "@tailwindcss/forms": "^0.5.3",
     "babel-loader": "^9.1.0",
     "css-loader": "^6.7.1",
+    "date-fns": "^2.29.3",
     "html-webpack-plugin": "^5.5.0",
     "postcss": "^8.4.19",
     "postcss-loader": "^7.0.1",
@@ -35,7 +36,6 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "node-polyfill-webpack-plugin": "^2.0.1",
     "postcss-preset-env": "^7.8.3"
   }
 }
