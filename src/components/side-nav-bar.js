@@ -1,20 +1,25 @@
-import {
-  pubsub
-} from "../index";
+/* beautify preserve:start */
+import { pubsub } from "../index";
 import InboxIcon from '../img/mail.png';
 import TodayIcon from '../img/calendar.png';
 import UpcomingIcon from '../img/planner.png';
+/* beautify preserve:end */
 
 export const navSideBar = {
-  render: container => {
-    const main = document.querySelector('.main')
+  render: () => {
+    const container = document.querySelector('body')
+    const contentDiv = document.querySelector('.content')
     const sideBar = document.createElement('nav');
     sideBar.classList = 'side-bar bg-nav-side-bar lg:visible';
 
     const mainFilterContainer = document.createElement('div')
     mainFilterContainer.classList = 'main-filter px-2 py-2';
     sideBar.appendChild(mainFilterContainer);
-    main.appendChild(sideBar);
+    contentDiv.appendChild(sideBar);
+
+    const main = document.createElement('main');
+    main.classList = 'lg:ml-72 ml-5';
+    contentDiv.appendChild(main);
 
     const mainFilters = {
       Inbox: InboxIcon,
@@ -22,14 +27,14 @@ export const navSideBar = {
       Upcoming: UpcomingIcon
     };
 
-    for (const [filter, imgPath] of Object.entries(mainFilters)) {
+    for (const [filter, image] of Object.entries(mainFilters)) {
       const mainFilterItem = document.createElement('div');
       mainFilterItem.classList = 'hover:bg-item-hover nav-item';
 
       const icon = document.createElement('span');
       const iconImage = document.createElement('img');
       iconImage.classList = 'h-11 w-11 inline';
-      iconImage.src = imgPath;
+      iconImage.src = image;
       icon.appendChild(iconImage);
 
       const mainFilterTitle = document.createElement('span');
@@ -37,6 +42,7 @@ export const navSideBar = {
 
       mainFilterItem.appendChild(icon);
       mainFilterItem.appendChild(mainFilterTitle);
+      mainFilterItem.addEventListener('pointerdown', navSideBar.serveMainFilter);
       mainFilterContainer.appendChild(mainFilterItem);
     }
 
@@ -46,6 +52,7 @@ export const navSideBar = {
     const header = document.createElement('div');
     header.classList = 'text-2xl flex hover:bg-item-hover nav-item';
     header.textContent = 'Your projects';
+    header.addEventListener('pointerdown', navSideBar.serveProject);
 
     projectContainer.appendChild(header);
     sideBar.appendChild(projectContainer);
@@ -55,89 +62,33 @@ export const navSideBar = {
     projectDiv.textContent = 'Dumb project name with really longggggggggggggggggggggggggg word';
     projectContainer.appendChild(projectDiv);
 
-    container.appendChild(main);
+    container.appendChild(contentDiv);
 
     pubsub.add('toggleNavSideBar', navSideBar.toggleNavSideBar);
   },
   toggleNavSideBar: () => {
     const sideBar = document.querySelector('.side-bar');
+    const main = document.querySelector('main');
     if (sideBar.style.display !== 'none') {
       sideBar.style.display = 'none';
+      main.classList.remove('lg:ml-72');
     } else {
       sideBar.style.display = 'block';
-    }
-  }
-}
-
-function renderNavSideBar() {
-  const main = document.querySelector('.main')
-  const sideBar = document.createElement('nav');
-  sideBar.classList = 'side-bar bg-nav-side-bar lg:visible';
-
-  const mainFilter = document.createElement('div')
-  mainFilter.classList = 'main-filter px-2 py-2';
-  sideBar.appendChild(mainFilter);
-  body.appendChild(sideBar);
-  sideBar.appendChild(mainFilter);
-  main.appendChild(sideBar);
-
-  renderMainFilterItems();
-  renderProjectFilter();
-};
-
-function renderMainFilterItems() {
-  const mainFilter = document.querySelector('.main-filter');
-  const mainFilters = {
-    Inbox: '/img/mail.png',
-    Today: '/img/calendar.png',
-    Upcoming: '/img/planner.png'
-  };
-  for (const [filter, imgPath] of Object.entries(mainFilters)) {
-    const mainFilterItem = document.createElement('div');
-    mainFilterItem.classList = 'hover:bg-item-hover nav-item';
-
-    const icon = document.createElement('span');
-    const iconImage = document.createElement('img');
-    iconImage.classList = 'h-11 w-11 inline';
-    iconImage.src = imgPath;
-    icon.appendChild(iconImage);
-
-    const mainFilterTitle = document.createElement('span');
-    mainFilterTitle.textContent = filter;
-
-    mainFilterItem.appendChild(icon);
-    mainFilterItem.appendChild(mainFilterTitle);
-    mainFilter.appendChild(mainFilterItem);
-  }
-};
-
-function renderProjectFilter() {
-  const sideBar = document.querySelector('.side-bar');
-  const projectContainer = document.createElement('div');
-  projectContainer.classList = 'group projects-filter border-t-2 border-[#3e4042]';
-
-  const header = document.createElement('div');
-  header.classList = 'text-2xl flex hover:bg-item-hover nav-item';
-  header.textContent = 'Your projects';
-
-  projectContainer.appendChild(header);
-  sideBar.appendChild(projectContainer);
-
-  //this need update with project query module
-
-  // if (projects !== undefined)
-  //   projects.forEach(project => {
-  //     const projectDiv = document.createElement('div');
-  //     projectDiv.classList = 'hover:bg-item-hover nav-item';
-  //     projectDiv.textContent = project.name;
-  //     projectContainer.appendChild(projectDiv);
-  //   });
-  // else return;
-
-  //sample placeholder project
-
-  const projectDiv = document.createElement('div');
-  projectDiv.classList = 'hover:bg-item-hover nav-item';
-  projectDiv.textContent = 'Dumb project name with really longggggggggggggggggggggggggg word';
-  projectContainer.appendChild(projectDiv);
+      main.classList.add('lg:ml-72');
+    };
+  },
+  serveMainFilter: (ev) => {
+    const name = ev.target.textContent;
+    pubsub.emit(`serve${name}Header`);
+    pubsub.emit('queryTodo', {
+      type: 'filter',
+      projectId: name.toLowerCase(),
+    });
+    pubsub.emit('serveTodoFooter');
+  },
+  serveProject: () => {
+    pubsub.emit('queryProject', {
+      type: 'nav',
+    });
+  },
 };
