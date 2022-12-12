@@ -29,15 +29,21 @@ select:focus {
   border-color: var(--primary-color);
 }
 
+@font-face {
+  font-family: 'Flighty Regular';
+  src: url(./fonts/FlightyRegular-vm7zA.ttf) format('ttf');
+}
+
 @layer components {
   .header {
     position: fixed;
-    width: 100vw;
+    width: 100%;
     top: 0px;
     z-index: 10;
     display: grid;
     grid-auto-flow: column;
     height: 3.5rem;
+    font-family: 'Flighty Regular';
   }
 
   .side-bar {
@@ -99,10 +105,17 @@ select:focus {
     grid-area: delete;
   }
 
-  .content {
+  main {
     display: grid;
     gap: 1.25rem;
     margin: 1.25rem;
+  }
+
+  .content-heading {
+    flex-grow: 1;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 
   .project-title {
@@ -140,7 +153,6 @@ select:focus {
   }
 
   .modal-overlay {
-    display: none;
     top: 0;
     position: fixed;
     z-index: 1000;
@@ -150,7 +162,6 @@ select:focus {
   }
 
   .modal-content {
-    display: none;
     position: fixed;
     z-index: 1010;
     width: 100vw;
