@@ -32,6 +32,7 @@ export const todoContent = {
       const deadline = document.createElement('div');
       deadline.classList = 'due-date';
       deadline.textContent = todo.getRemainingTime();
+      deadline.title = todo.dueDate;
 
       const descContainer = document.createElement('div');
       const descContent = document.createElement('p');
@@ -66,8 +67,6 @@ export const todoContent = {
       container.appendChild(todoContainer);
     });
   },
-  deleteTodo: (ev) => {
-  },
   handleClick: (ev) => {
     const request = ev.target.id;
     if (request == 'todo-complete-toggle') {
@@ -75,22 +74,28 @@ export const todoContent = {
       return pubsub.emit('todoToggleCompletion', query);
     };
     if (request == 'todo-edit') {
-      const query = ev.target.closest('.todo-item').dataset.todoId
-      return console.log(query)
+      const todoElement = ev.target.closest('.todo-item');
+      const todoName = todoElement.querySelector('.title').textContent;
+      const projectId = todoElement.dataset.projectId;
+      const currentTodoId = todoElement.dataset.todoId;
+      return pubsub.emit('queryProject', {
+        type: request,
+        name: todoName,
+        projectId: projectId,
+        todoId: currentTodoId,
+        element: todoElement,
+      });
     };
     if (request == 'todo-delete') {
-    const todoElement = ev.target.closest('.todo-item');
-    const todoName = todoElement.querySelector('.title').textContent;
-    console.log(todoName)
-    // const projectId = todoElement.dataset.projectId;
-    const todoId = todoElement.dataset.todoId;
-    return pubsub.emit('confirmDeleteData', {
-      type: request,
-      name: todoName,
-      // projectId: projectId,
-      todoId: todoId,
-      element: todoElement,
-    });
+      const todoElement = ev.target.closest('.todo-item');
+      const todoName = todoElement.querySelector('.title').textContent;
+      const todoId = todoElement.dataset.todoId;
+      return pubsub.emit('confirmDeleteData', {
+        type: request,
+        name: todoName,
+        todoId: todoId,
+        element: todoElement,
+      });
     } else {
       const query = ev.target.closest('.project-item').dataset.projectId
       pubsub.emit('queryProject', {

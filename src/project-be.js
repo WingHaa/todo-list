@@ -42,15 +42,22 @@ export const projectModule = {
   getProject: (request) => {
     let result = [];
     // viewing all projects
-    if (request.type == 'nav') {
-      result = projectModule.projects;
+    if (request.type == 'page') {
       pubsub.emit('serveProjectHeader');
-      pubsub.emit('serveProjectBody', result);
+      pubsub.emit('serveProjectBody', projectModule.projects);
+      return;
+    }
+    if (request.type == 'nav') {
+      pubsub.emit('buildProjectShortcut', projectModule.projects);
       return;
     }
     if (request.type == 'modal') {
-      result = projectModule.projects;
-      pubsub.emit('addNewTodo', result);
+      pubsub.emit('addNewTodo', projectModule.projects);
+      return;
+    }
+    if (request.type == 'todo-edit') {
+      request.projects = projectModule.projects;
+      pubsub.emit('modifyDataRequest', request);
       return;
     } else {
       // viewing a single project

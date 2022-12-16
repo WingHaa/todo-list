@@ -21,10 +21,11 @@ import { modificationModal } from './components/modify-data';
 window.addEventListener('DOMContentLoaded', renderHomePage);
 function renderHomePage() {
   const body = document.querySelector('body');
-  header.render(body);
-  navSideBar.render();
   projectModule.init();
   todoModule.init();
+
+  header.render(body);
+  navSideBar.render();
   inboxHeader.init();
   todayHeader.init();
   upcomingHeader.init();

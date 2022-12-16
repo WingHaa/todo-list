@@ -7,6 +7,9 @@ import UpcomingIcon from '../img/planner.png';
 
 export const navSideBar = {
   render: () => {
+    pubsub.add('toggleNavSideBar', navSideBar.toggleNavSideBar);
+    pubsub.add('buildProjectShortcut', navSideBar.serveProjectShortcut);
+
     const container = document.querySelector('body')
     const contentDiv = document.querySelector('.content')
     const sideBar = document.createElement('nav');
@@ -30,6 +33,7 @@ export const navSideBar = {
     for (const [filter, image] of Object.entries(mainFilters)) {
       const mainFilterItem = document.createElement('div');
       mainFilterItem.classList = 'hover:bg-item-hover nav-item';
+      if (filter == 'Inbox') mainFilterItem.classList.add('bg-item-hover');
 
       const icon = document.createElement('span');
       const iconImage = document.createElement('img');
@@ -52,19 +56,20 @@ export const navSideBar = {
     const header = document.createElement('div');
     header.classList = 'text-2xl flex hover:bg-item-hover nav-item';
     header.textContent = 'Your projects';
-    header.addEventListener('pointerdown', navSideBar.serveProject);
+    header.addEventListener('pointerdown', navSideBar.serveProjectPage);
 
     projectContainer.appendChild(header);
     sideBar.appendChild(projectContainer);
 
-    const projectDiv = document.createElement('div');
-    projectDiv.classList = 'hover:bg-item-hover nav-item';
-    projectDiv.textContent = 'Dumb project name with really longggggggggggggggggggggggggg word';
-    projectContainer.appendChild(projectDiv);
+    pubsub.emit('queryProject', {
+      type: 'nav'
+    });
 
     container.appendChild(contentDiv);
-
-    pubsub.add('toggleNavSideBar', navSideBar.toggleNavSideBar);
+    const filters = container.querySelectorAll('.hover\\:bg-item-hover');
+    filters.forEach(element => {
+      element.addEventListener('pointerdown', navSideBar.controlBackground);
+    });
   },
   toggleNavSideBar: () => {
     const sideBar = document.querySelector('.side-bar');
@@ -86,9 +91,31 @@ export const navSideBar = {
     });
     pubsub.emit('serveTodoFooter');
   },
-  serveProject: () => {
+  serveProjectPage: () => {
     pubsub.emit('queryProject', {
-      type: 'nav',
+      type: 'page',
     });
+  },
+  serveProjectShortcut: (projects) => {
+    const projectContainer = document.querySelector('.projects-filter');
+    projects.forEach(project => {
+      const projectDiv = document.createElement('div');
+      projectDiv.classList = 'hover:bg-item-hover nav-item';
+      projectDiv.textContent = project.name;
+      projectDiv.dataset.projectId = project.id;
+      projectDiv.addEventListener('pointerdown', navSideBar.serveSingleProjectPage);
+      projectContainer.appendChild(projectDiv);
+    });
+  },
+  serveSingleProjectPage: (ev) => {
+    pubsub.emit('queryProject', {
+      projectId: ev.target.dataset.projectId,
+    });
+    pubsub.emit('serveTodoFooter')
+  },
+  controlBackground: (ev) => {
+    const filters = document.querySelector('.side-bar').querySelectorAll('.hover\\:bg-item-hover');
+    filters.forEach(element => element.classList.remove('bg-item-hover'));
+    ev.target.classList.add('bg-item-hover');
   },
 };

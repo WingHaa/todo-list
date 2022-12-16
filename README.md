@@ -1,8 +1,12 @@
 Stuffs to implement:
-- Edit a project
-- Edit Todo
+~~- Toggle a todo finish status~~
+~~- Edit a project~~
+- Edit Todo: 
+    ~~Fix form not showing projects user currently have.~~
+    Write logic to update the element after user confirm their edit.
 - View Todo
 - Auto adding project shortcut
+- Highlight category that's currently selected
 
 List of icons used:
 <a href="https://www.flaticon.com/free-icons/mail-inbox" title="mail inbox icons">Mail inbox icons created by Bima Pamungkas - Flaticon</a>

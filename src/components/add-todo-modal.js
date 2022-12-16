@@ -70,6 +70,11 @@ export const todoModal = {
     projectInput.name = 'project-id';
     projectInput.id = 'project-id';
     projectInput.classList = 'form-item';
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '0';
+    defaultOption.textContent = 'Inbox';
+    projectInput.appendChild(defaultOption);
     if (projects) {
       for (let index = 0; index < projects.length; index++) {
         const project = projects[index];

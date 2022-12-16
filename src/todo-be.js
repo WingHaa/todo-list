@@ -55,7 +55,8 @@ export const todoModule = {
     pubsub.add('queryTodo', todoModule.getTodo);
     pubsub.add('todoCreation', todoModule.createTodo);
     pubsub.add('todoDeletion', todoModule.deleteTodo);
-    pubsub.add('todoToggleCompletion', todoModule.toggle);
+    pubsub.add('todoModification', todoModule.modifyTodo);
+    pubsub.add('todoToggleCompletion', todoModule.toggleStatus);
   },
   createTodo: (form) => {
     const todo = new Todo(form);
@@ -104,10 +105,20 @@ export const todoModule = {
       todo.projectId != request.projectId &&
       todo.todoId != request.todoId);
   },
-  toggle: (id) => {
+  modifyTodo: (query) => {
+    todoModule.todos.map(todo => {
+      if (todo.todoId == query.todoId) {
+        todo.title = query.form['todo-name'];
+        todo.desc = query.form['todo-desc'];
+        todo.dueDate = query.form['todo-date'];
+        todo.priority = query.form['todo-priority'];
+        todo.projectId = query.form['project-id'];
+      };
+    });
+  },
+  toggleStatus: (id) => {
     todoModule.todos.map(todo => {
       if (todo.todoId == 1) todo.complete = !todo.complete;
     });
-  console.log(todoModule.todos)
   },
 }
