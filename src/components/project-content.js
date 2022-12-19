@@ -6,12 +6,15 @@ import DelIcon from '../img/project-delete.png'
 export const projectContent = {
   init: () => {
     pubsub.add('serveProjectBody', projectContent.render);
-    pubsub.add('projectCreated', projectContent.render);
+    pubsub.add('projectUpdated', projectContent.render);
     pubsub.add('projectModification', projectContent.modifyProject);
   },
   render: projects => {
     if (projects.length < 1) return;
     const container = document.querySelector('main');
+    while (container.childNodes.length > 1) {
+      container.removeChild(container.lastChild);
+    }
 
     projects.forEach(project => {
       const projectContainer = document.createElement('div');

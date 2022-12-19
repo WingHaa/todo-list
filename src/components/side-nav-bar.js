@@ -9,6 +9,7 @@ export const navSideBar = {
   render: () => {
     pubsub.add('toggleNavSideBar', navSideBar.toggleNavSideBar);
     pubsub.add('buildProjectShortcut', navSideBar.renderProjectShortcut);
+    pubsub.add('projectUpdated', navSideBar.renderProjectShortcut);
     pubsub.add('projectViewChange', navSideBar.controlBackground);
     pubsub.add('todoUpdated', navSideBar.refreshCurrentPage);
 
@@ -102,6 +103,9 @@ export const navSideBar = {
   },
   renderProjectShortcut: (projects) => {
     const projectContainer = document.querySelector('.projects-filter');
+    while (projectContainer.childNodes.length > 1) {
+      projectContainer.removeChild(projectContainer.lastChild);
+    }
     projects.forEach(project => {
       const projectDiv = document.createElement('div');
       projectDiv.classList = 'hover:bg-item-hover nav-item';

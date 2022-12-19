@@ -37,7 +37,7 @@ export const projectModule = {
     project.id = latestProject?.id + 1 || 1;
     /* beautify preserve:end */
     projectModule.projects.push(project);
-    pubsub.emit('projectCreated', [project]);
+    pubsub.emit('projectUpdated', projectModule.projects);
   },
   getProject: (request) => {
     let result = [];
@@ -85,6 +85,7 @@ export const projectModule = {
     projectModule.projects.map(project => {
       if (project.id == id) {
         project.name = request.name;
+        pubsub.emit('projectUpdated', projectModule.projects);
       };
     });
   },
