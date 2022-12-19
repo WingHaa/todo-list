@@ -65,7 +65,7 @@ export const todoModule = {
     todo.todoId = latestTodo?.todoId + 1 || 1;
     /* beautify preserve:end */
     todoModule.todos.push(todo);
-    pubsub.emit('todoCreated', [todo]);
+    pubsub.emit('todoUpdated');
   },
   getTodo: (request) => {
     let result = [];
@@ -111,6 +111,7 @@ export const todoModule = {
         todo.dueDate = query.form['todo-date'];
         todo.priority = query.form['todo-priority'];
         todo.projectId = query.form['project-id'];
+        pubsub.emit('todoUpdated');
       };
     });
   },

@@ -10,7 +10,7 @@ export const navSideBar = {
     pubsub.add('toggleNavSideBar', navSideBar.toggleNavSideBar);
     pubsub.add('buildProjectShortcut', navSideBar.renderProjectShortcut);
     pubsub.add('projectViewChange', navSideBar.controlBackground);
-    pubsub.add('todoCreated', navSideBar.refreshCurrentPage);
+    pubsub.add('todoUpdated', navSideBar.refreshCurrentPage);
 
     const container = document.querySelector('body')
     const contentDiv = document.querySelector('.content')
