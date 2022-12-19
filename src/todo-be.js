@@ -70,17 +70,15 @@ export const todoModule = {
   getTodo: (request) => {
     let result = [];
     // viewing todo from main filter
-    if (request.type = 'filter') {
-      if (request.projectId == 'inbox')
-        return pubsub.emit('serveTodoBody', todoModule.todos);
-      if (request.projectId == 'today') {
-        result = todoModule.todos.filter(todo => todo.isToday() == true);
-        return pubsub.emit('serveTodoBody', result);
-      };
-      if (request.projectId == 'upcoming') {
-        result = todoModule.todos.filter(todo => todo.isUpcoming() == true);
-        return pubsub.emit('serveTodoBody', result);
-      };
+    if (request.projectId == 'inbox')
+      return pubsub.emit('serveTodoBody', todoModule.todos);
+    if (request.projectId == 'today') {
+      result = todoModule.todos.filter(todo => todo.isToday() == true);
+      return pubsub.emit('serveTodoBody', result);
+    };
+    if (request.projectId == 'upcoming') {
+      result = todoModule.todos.filter(todo => todo.isUpcoming() == true);
+      return pubsub.emit('serveTodoBody', result);
     };
     // viewing todos in a project
     if (!request.projectId) {
@@ -118,7 +116,7 @@ export const todoModule = {
   },
   toggleStatus: (id) => {
     todoModule.todos.map(todo => {
-      if (todo.todoId == 1) todo.complete = !todo.complete;
+      if (todo.todoId == id) todo.complete = !todo.complete;
     });
   },
 }

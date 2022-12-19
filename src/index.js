@@ -19,6 +19,7 @@ import { modificationModal } from './components/modify-data';
 /* beautify preserve:end */
 
 window.addEventListener('DOMContentLoaded', renderHomePage);
+
 function renderHomePage() {
   const body = document.querySelector('body');
   projectModule.init();
@@ -42,8 +43,11 @@ function renderHomePage() {
   confirmDeletionModal.init();
   modificationModal.init();
 
-  pubsub.emit('serveInboxHeader')
-  pubsub.emit('queryTodo', {projectId: 'inbox'})
+  pubsub.emit('serveInboxHeader');
+  pubsub.emit('preRenderTodosContainer');
+  pubsub.emit('queryTodo', {
+    projectId: 'inbox'
+  })
   pubsub.emit('serveTodoFooter');
 };
 

@@ -6,8 +6,6 @@ import addIcon from "../img/todo-add.png";
 export const todoFooter = {
   init: () => {
     pubsub.add('serveTodoFooter', todoFooter.render);
-    pubsub.add('todoCreated', todoFooter.delete);
-    pubsub.add('todoCreated', todoFooter.render);
   },
   render: () => {
     const container = document.querySelector('main');
@@ -32,9 +30,5 @@ export const todoFooter = {
     pubsub.emit('queryProject', {
       type: 'modal',
     });
-  },
-  delete: () => {
-    const button = document.querySelector('#add');
-    button.remove();
   },
 };

@@ -63,6 +63,7 @@ export const projectModule = {
       // viewing a single project
       result = projectModule.projects.filter(project => project.id == request.projectId);
       pubsub.emit('serveProjectHeader', result);
+      pubsub.emit('preRenderTodosContainer');
       pubsub.emit('queryTodo', request);
     }
   },

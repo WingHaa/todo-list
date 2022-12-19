@@ -8,7 +8,9 @@ import UpcomingIcon from '../img/planner.png';
 export const navSideBar = {
   render: () => {
     pubsub.add('toggleNavSideBar', navSideBar.toggleNavSideBar);
-    pubsub.add('buildProjectShortcut', navSideBar.serveProjectShortcut);
+    pubsub.add('buildProjectShortcut', navSideBar.renderProjectShortcut);
+    pubsub.add('projectViewChange', navSideBar.controlBackground);
+    pubsub.add('todoCreated', navSideBar.refreshCurrentPage);
 
     const container = document.querySelector('body')
     const contentDiv = document.querySelector('.content')
@@ -47,6 +49,7 @@ export const navSideBar = {
       mainFilterItem.appendChild(icon);
       mainFilterItem.appendChild(mainFilterTitle);
       mainFilterItem.addEventListener('pointerdown', navSideBar.serveMainFilter);
+      mainFilterItem.dataset.projectId = filter.toLocaleLowerCase();
       mainFilterContainer.appendChild(mainFilterItem);
     }
 
@@ -84,10 +87,11 @@ export const navSideBar = {
   },
   serveMainFilter: (ev) => {
     const name = ev.target.textContent;
+    const id = ev.target.dataset.projectId;
     pubsub.emit(`serve${name}Header`);
+    pubsub.emit('preRenderTodosContainer');
     pubsub.emit('queryTodo', {
-      type: 'filter',
-      projectId: name.toLowerCase(),
+      projectId: id,
     });
     pubsub.emit('serveTodoFooter');
   },
@@ -96,7 +100,7 @@ export const navSideBar = {
       type: 'page',
     });
   },
-  serveProjectShortcut: (projects) => {
+  renderProjectShortcut: (projects) => {
     const projectContainer = document.querySelector('.projects-filter');
     projects.forEach(project => {
       const projectDiv = document.createElement('div');
@@ -114,8 +118,17 @@ export const navSideBar = {
     pubsub.emit('serveTodoFooter')
   },
   controlBackground: (ev) => {
-    const filters = document.querySelector('.side-bar').querySelectorAll('.hover\\:bg-item-hover');
-    filters.forEach(element => element.classList.remove('bg-item-hover'));
-    ev.target.classList.add('bg-item-hover');
+    const project = ev.target.closest('.nav-item') || ev.target.closest('.project-item');
+    const filters = document.querySelector('.side-bar').querySelectorAll('.nav-item');
+    filters.forEach(element => {
+      element.classList.remove('bg-item-hover');
+      if (element.dataset.projectId == project.dataset.projectId)
+        element.classList.add('bg-item-hover');
+    });
+  },
+  refreshCurrentPage: () => {
+  const currentFilter = document.querySelector('.bg-item-hover');
+  const event = new Event('pointerdown', {bubbles: true});
+  currentFilter.dispatchEvent(event);
   },
 };

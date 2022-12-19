@@ -243,4 +243,10 @@ select:focus {
     left: 50%;
     transform: translate(-50%, -50%);
   }
+
+  .todos-container {
+    display: grid;
+    gap: 1.25rem;
+  }
+
 }

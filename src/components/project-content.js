@@ -71,6 +71,7 @@ export const projectContent = {
       });
     } else {
       const query = ev.target.closest('.project-item').dataset.projectId
+      pubsub.emit('projectViewChange', ev)
       pubsub.emit('queryProject', {
         type: 'single',
         projectId: query

@@ -10,7 +10,8 @@ export const todoHeader = {
     const heading = document.createElement('h2')
     heading.classList = 'content-heading font-bold text-xl';
     heading.textContent = todo.name;
-
-    container.appendChild(heading)
+    
+    const todosBody = document.createElement('div');
+    todosBody.classList = 'todos-container';
   },
 };

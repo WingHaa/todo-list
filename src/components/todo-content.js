@@ -7,11 +7,23 @@ import DelIcon from '../img/project-delete.png';
 export const todoContent = {
   init: () => {
     pubsub.add('serveTodoBody', todoContent.render);
-    pubsub.add('todoCreated', todoContent.render);
+    pubsub.add('preRenderTodosContainer', todoContent.renderTodosContainer);
+  },
+  renderTodosContainer: () => {
+    const container = document.querySelector('main');
+    const todosBody = document.createElement('div');
+    todosBody.classList = 'todos-container';
+    container.appendChild(todosBody);
   },
   render: todos => {
-    if (todos.length < 1) return;
-    const container = document.querySelector('main');
+    const container = document.querySelector('.todos-container');
+    container.innerHTML = ''; //clear old contents if there are any
+    if (todos.length < 1) {
+      const notice = document.createElement('h2');
+      notice.textContent = `There is no todo added yet.`;
+      container.appendChild(notice);
+      return;
+    };
 
     todos.forEach(todo => {
       const todoContainer = document.createElement('div');
@@ -63,6 +75,7 @@ export const todoContent = {
       todoContainer.appendChild(descContainer);
       todoContainer.appendChild(edit);
       todoContainer.appendChild(deleteTodoButton);
+
 
       container.appendChild(todoContainer);
     });

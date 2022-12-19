@@ -148,14 +148,12 @@ export const modificationModal = {
       priorityLabel.appendChild(priorityLabelContent);
       priorityLabel.appendChild(priorityInput);
 
-
       form.appendChild(nameLabel)
       form.appendChild(descLabel);
       form.appendChild(dateLabel);
       form.appendChild(projectLabel);
       form.appendChild(priorityLabel);
     }
-
 
     const buttonDiv = document.createElement('div');
     buttonDiv.classList = 'flex justify-end pt-10';
