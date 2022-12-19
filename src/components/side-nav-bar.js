@@ -117,6 +117,7 @@ export const navSideBar = {
   },
   serveSingleProjectPage: (ev) => {
     pubsub.emit('queryProject', {
+      type: 'single-project',
       projectId: ev.target.dataset.projectId,
     });
     pubsub.emit('serveTodoFooter')

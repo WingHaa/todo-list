@@ -32,7 +32,6 @@ export const projectContent = {
       editImg.classList = 'w-10 hover:bg-item-hover';
       editImg.src = EditIcon;
       editProject.appendChild(editImg);
-      // editProject.addEventListener('pointerdown', projectContent.editProject)
 
       const delProject = document.createElement('button');
       const delImg = document.createElement('img');
@@ -40,7 +39,6 @@ export const projectContent = {
       delImg.classList = 'w-10 hover:bg-item-hover';
       delImg.src = DelIcon;
       delProject.appendChild(delImg);
-      // delProject.addEventListener('pointerdown', projectContent.deleteProject);
 
       projectContainer.appendChild(projectName);
       projectContainer.appendChild(editProject);
@@ -76,7 +74,7 @@ export const projectContent = {
       const query = ev.target.closest('.project-item').dataset.projectId
       pubsub.emit('projectViewChange', ev)
       pubsub.emit('queryProject', {
-        type: 'single',
+        type: 'single-project',
         projectId: query
       });
       pubsub.emit('serveTodoFooter');

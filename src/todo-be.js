@@ -1,7 +1,7 @@
 /* beautify preserve:start */
 import { pubsub } from "./index";
 import { compareAsc } from 'date-fns';
-import { formatDistance } from 'date-fns'
+import { format, formatDistance } from 'date-fns'
 /* beautify preserve:end */
 
 const Todo = function (prop) {
@@ -19,6 +19,10 @@ Todo.prototype.getRemainingTime = function () {
   return formatDistance(new Date(`${this.dueDate}T24:00:00`), new Date(), {
     addSuffix: true
   });
+}
+
+Todo.prototype.format = function () {
+  return format(new Date(this.dueDate), 'MMM dd, yyyy');
 }
 
 Todo.prototype.toggleComplete = function () {
@@ -69,7 +73,7 @@ export const todoModule = {
   },
   getTodo: (request) => {
     let result = [];
-    // viewing todo from main filter
+    // viewing todo from 3 main filters
     if (request.projectId == 'inbox')
       return pubsub.emit('serveTodoBody', todoModule.todos);
     if (request.projectId == 'today') {
@@ -80,11 +84,13 @@ export const todoModule = {
       result = todoModule.todos.filter(todo => todo.isUpcoming() == true);
       return pubsub.emit('serveTodoBody', result);
     };
-    // viewing todos in a project
+    // viewing a specific todo
     if (!request.projectId) {
+      console.log('i run')
       result = todoModule.todos.filter(todo => todo.id = request.todoId);
-      return pubsub.emit('serveTodoBody', result);
+      return pubsub.emit('getDetailsOfTodo', result[0]);
     }
+    // viewing all todos that belong to a project
     result = todoModule.todos.filter(todo =>
       todo.projectId == request.projectId &&
       todo.id == request.id);

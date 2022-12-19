@@ -16,6 +16,7 @@ import { projectModal } from './components/add-project-modal';
 import { todoModal } from './components/add-todo-modal';
 import { confirmDeletionModal } from './components/delete-confirmation';
 import { modificationModal } from './components/modify-data';
+import { viewTodoModal } from './components/todo-detail';
 /* beautify preserve:end */
 
 window.addEventListener('DOMContentLoaded', renderHomePage);
@@ -38,6 +39,7 @@ function renderHomePage() {
 
   todoFooter.init();
 
+  viewTodoModal.init();
   projectModal.init();
   todoModal.init();
   confirmDeletionModal.init();

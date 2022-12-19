@@ -59,12 +59,18 @@ export const projectModule = {
       request.projects = projectModule.projects;
       pubsub.emit('modifyDataRequest', request);
       return;
-    } else {
+    }
+    if (request.type == 'single-project') {
       // viewing a single project
       result = projectModule.projects.filter(project => project.id == request.projectId);
       pubsub.emit('serveProjectHeader', result);
       pubsub.emit('preRenderTodosContainer');
       pubsub.emit('queryTodo', request);
+    } else {
+      // get project name when viewing a single todo
+      result = projectModule.projects.filter(project => project.id == request.projectId);
+      console.log(result)
+      pubsub.emit('foundProjectOfViewedTodo', result[0]);
     }
   },
   deleteProject: (id) => {

@@ -110,12 +110,11 @@ export const todoContent = {
         element: todoElement,
       });
     } else {
-      const query = ev.target.closest('.project-item').dataset.projectId
-      pubsub.emit('queryProject', {
-        type: 'single',
-        projectId: query
+      // viewing a single todo
+      const query = ev.target.closest('.todo-item').dataset.todoId
+      pubsub.emit('queryTodo', {
+        todoId: query
       });
-      pubsub.emit('serveTodoFooter');
     }
   },
 };
