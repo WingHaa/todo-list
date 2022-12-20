@@ -88,7 +88,7 @@ export const navSideBar = {
   },
   serveMainFilter: (ev) => {
     const name = ev.target.textContent;
-    const id = ev.target.dataset.projectId;
+    const id = ev.target.closest('.nav-item').dataset.projectId;
     pubsub.emit(`serve${name}Header`);
     pubsub.emit('preRenderTodosContainer');
     pubsub.emit('queryTodo', {

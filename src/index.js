@@ -22,6 +22,7 @@ import { viewTodoModal } from './components/todo-detail';
 window.addEventListener('DOMContentLoaded', renderHomePage);
 
 function renderHomePage() {
+
   const body = document.querySelector('body');
   projectModule.init();
   todoModule.init();

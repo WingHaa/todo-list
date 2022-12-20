@@ -9,8 +9,8 @@ const Todo = function (prop) {
   this.desc = prop['todo-desc'];
   this.dueDate = prop['todo-date'];
   this.priority = prop['todo-priority'];
-  this.complete = false;
-  this.todoId = 0;
+  this.complete = prop['complete'] || false;
+  this.todoId = prop['todo-id'];
   this.projectId = prop['project-id'] || 0;
 }
 
@@ -53,9 +53,38 @@ Todo.prototype.isUpcoming = function () {
   return false;
 }
 
+Storage.prototype.getObject = function (key) {
+  var value = this.getItem(key);
+  return value && JSON.parse(value);
+}
+
+function serialize(arr) {
+  let serialized = [];
+  arr.forEach(function (obj) {
+    serialized.push({
+      "todo-name": obj.title,
+      "todo-desc": obj.desc,
+      "todo-date": obj.dueDate,
+      "todo-priority": obj.priority,
+      "complete": obj.complete,
+      "todo-id": obj.todoId,
+      "project-id": obj.projectId,
+    });
+  });
+  localStorage.setItem('todos', JSON.stringify(serialized));
+};
+
+function deserialize() {
+  let todos = localStorage.getObject('todos') || [];
+  if (todos.length > 0)
+    return todos.map(pojo => new Todo(pojo));
+  return [];
+};
+
 export const todoModule = {
   todos: [],
   init: () => {
+    todoModule.todos = deserialize();
     pubsub.add('queryTodo', todoModule.getTodo);
     pubsub.add('todoCreation', todoModule.createTodo);
     pubsub.add('todoDeletion', todoModule.deleteTodo);
@@ -63,12 +92,13 @@ export const todoModule = {
     pubsub.add('todoToggleCompletion', todoModule.toggleStatus);
   },
   createTodo: (form) => {
-    const todo = new Todo(form);
     const latestTodo = todoModule.todos[todoModule.todos.length - 1];
     /* beautify preserve:start */
-    todo.todoId = latestTodo?.todoId + 1 || 1;
+    form['todo-id'] = latestTodo?.todoId + 1 || 1;
     /* beautify preserve:end */
+    const todo = new Todo(form);
     todoModule.todos.push(todo);
+    serialize(todoModule.todos);
     pubsub.emit('todoUpdated');
   },
   getTodo: (request) => {
@@ -86,8 +116,7 @@ export const todoModule = {
     };
     // viewing a specific todo
     if (!request.projectId) {
-      console.log('i run')
-      result = todoModule.todos.filter(todo => todo.id = request.todoId);
+      result = todoModule.todos.filter(todo => todo.todoId == request.todoId);
       return pubsub.emit('getDetailsOfTodo', result[0]);
     }
     // viewing all todos that belong to a project
@@ -98,16 +127,20 @@ export const todoModule = {
   },
   deleteTodo: (request) => {
     if (request.type == 'project') {
-      return todoModule.todos = todoModule.todos.filter(todo =>
-        todo.projectId != request.projectId);
+      todoModule.todos = todoModule.todos.filter(todo =>
+        todo.projectId != request.projectId
+      );
+      return serialize(todoModule.todos);
     };
     if (request.type == 'todo') {
-      return todoModule.todos = todoModule.todos.filter(todo =>
+      todoModule.todos = todoModule.todos.filter(todo =>
         todo.todoId != request.todoId);
+      return serialize(todoModule.todos);
     };
-    return todoModule.todos = todoModule.todos.filter(todo =>
+    todoModule.todos = todoModule.todos.filter(todo =>
       todo.projectId != request.projectId &&
       todo.todoId != request.todoId);
+    return serialize(todoModule.todos);
   },
   modifyTodo: (query) => {
     todoModule.todos.map(todo => {
@@ -120,10 +153,12 @@ export const todoModule = {
         pubsub.emit('todoUpdated');
       };
     });
+    serialize(todoModule.todos);
   },
   toggleStatus: (id) => {
     todoModule.todos.map(todo => {
       if (todo.todoId == id) todo.complete = !todo.complete;
     });
+    serialize(todoModule.todos);
   },
 }

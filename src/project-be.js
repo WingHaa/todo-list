@@ -4,39 +4,44 @@ import { pubsub } from "./index"
 
 const Project = function (prop) {
   this.name = prop['project-name'];
+  this.id = prop['project-id'];
 }
 
+function serialize(arr) {
+  let serialized = [];
+  arr.forEach(function (obj) {
+    serialized.push({
+      "project-name": obj.name,
+      "project-id": obj.id,
+    });
+  });
+  localStorage.setItem('projects', JSON.stringify(serialized));
+};
+
+function deserialize() {
+  let projects = localStorage.getObject('projects') || [];
+  if (projects.length > 0)
+    return projects.map(pojo => new Project(pojo));
+  return [];
+};
+
 export const projectModule = {
-  projects: [{
-      name: 'Project A',
-      id: '1'
-    },
-    {
-      name: 'Project B',
-      id: '2'
-    },
-    {
-      name: 'Project C',
-      id: '3'
-    },
-    {
-      name: 'Project D',
-      id: '4'
-    },
-  ],
+  projects: [],
   init: () => {
+    projectModule.projects = deserialize();
     pubsub.add('projectCreation', projectModule.createProject);
     pubsub.add('projectDeletion', projectModule.deleteProject);
     pubsub.add('projectModification', projectModule.editProject);
     pubsub.add('queryProject', projectModule.getProject);
   },
   createProject: (form) => {
-    const project = new Project(form);
     const latestProject = projectModule.projects[projectModule.projects.length - 1];
     /* beautify preserve:start */
-    project.id = latestProject?.id + 1 || 1;
+    form['project-id'] = latestProject?.id + 1 || 1;
     /* beautify preserve:end */
+    const project = new Project(form);
     projectModule.projects.push(project);
+    serialize(projectModule.projects);
     pubsub.emit('projectUpdated', projectModule.projects);
   },
   getProject: (request) => {
@@ -69,7 +74,6 @@ export const projectModule = {
     } else {
       // get project name when viewing a single todo
       result = projectModule.projects.filter(project => project.id == request.projectId);
-      console.log(result)
       pubsub.emit('foundProjectOfViewedTodo', result[0]);
     }
   },
@@ -80,11 +84,12 @@ export const projectModule = {
         projectModule.projects.splice(index, 1);
       }
     };
+    serialize(projectModule.projects);
     pubsub.emit('todoDeletion', {
       // sending type so todo be know it is project related deletion
       type: 'project',
       projectId: id
-    })
+    });
   },
   editProject: (request) => {
     const id = request.projectId;
@@ -94,5 +99,6 @@ export const projectModule = {
         pubsub.emit('projectUpdated', projectModule.projects);
       };
     });
+    serialize(projectModule.projects);
   },
 };
