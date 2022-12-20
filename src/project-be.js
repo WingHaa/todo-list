@@ -85,11 +85,12 @@ export const projectModule = {
       }
     };
     serialize(projectModule.projects);
+    // delete all todos that belong to the deleted project
     pubsub.emit('todoDeletion', {
-      // sending type so todo be know it is project related deletion
       type: 'project',
       projectId: id
     });
+    pubsub.emit('projectUpdated', projectModule.projects);
   },
   editProject: (request) => {
     const id = request.projectId;

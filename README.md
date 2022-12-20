@@ -1,13 +1,14 @@
 Stuffs to implement:
 ~~- Toggle a todo finish status~~
 ~~- Edit a project~~
-- Edit Todo: 
+~~- Edit Todo: ~~
     ~~Fix form not showing projects user currently have.~~
     ~~Write logic to update the element after user confirm their edit.~~
 ~~- View Todo~~
 ~~- Auto adding project shortcut~~
 ~~- Highlight category that's currently selected~~
-- Save projects and todos in json format
+~~- Save projects and todos in json format~~
+~~- Update project quick jump link after deleting a project.~~
 
 List of icons used:
 <a href="https://www.flaticon.com/free-icons/mail-inbox" title="mail inbox icons">Mail inbox icons created by Bima Pamungkas - Flaticon</a>
