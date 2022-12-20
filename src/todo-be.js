@@ -85,6 +85,7 @@ export const todoModule = {
   todos: [],
   init: () => {
     todoModule.todos = deserialize();
+    loadSampleTodo(todoModule.todos);
     pubsub.add('queryTodo', todoModule.getTodo);
     pubsub.add('todoCreation', todoModule.createTodo);
     pubsub.add('todoDeletion', todoModule.deleteTodo);
@@ -161,4 +162,27 @@ export const todoModule = {
     });
     serialize(todoModule.todos);
   },
+};
+
+function TodoProp(title, desc, dueDate, priority, complete, todoId, projectId) {
+  this["todo-name"] = title;
+  this["todo-desc"] = desc;
+  this["todo-date"] = dueDate;
+  this["todo-priority"] = priority;
+  this["complete"] = complete;
+  this["todo-id"] = todoId;
+  this["project-id"] = projectId;
+};
+
+let sampleTodoProps = [
+  new TodoProp('Go swimming with friends', '8 AM Sunday at local river', '2023-04-24', 'high', false, 10001, 0),
+  new TodoProp('Learn React', '', '2023-02-24', 'med', true, 10002, 10001),
+  new TodoProp('Learn Next.js', 'After knowing React, Next.js would be a nice knowledge to have in order to become a fullstack developer', '2023-06-01', 'med', false, 10003, 10001),
+  new TodoProp('Work on my 6 packs', 'Developer need a healthy body too!', '2023-10-15', 'high', true, 10004, 10002),
+  new TodoProp('Make some more friends!', 'Never know when you need em', '2033-04-24', 'low', false, 10005, 10002),
+];
+
+function loadSampleTodo(arr) {
+  const todos = sampleTodoProps.map(prop => new Todo(prop));
+  todos.forEach(obj => arr.push(obj));
 }

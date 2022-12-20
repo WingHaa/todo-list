@@ -29,6 +29,7 @@ export const projectModule = {
   projects: [],
   init: () => {
     projectModule.projects = deserialize();
+    loadSampleProject(projectModule.projects);
     pubsub.add('projectCreation', projectModule.createProject);
     pubsub.add('projectDeletion', projectModule.deleteProject);
     pubsub.add('projectModification', projectModule.editProject);
@@ -103,3 +104,18 @@ export const projectModule = {
     serialize(projectModule.projects);
   },
 };
+
+function ProjectProp(title, id) {
+  this["project-name"] = title;
+  this["project-id"] = id;
+};
+
+let sampleProjectProps = [
+  new ProjectProp('Web development education', 10001),
+  new ProjectProp('Healthy lifestyle driver', 10002),
+];
+
+function loadSampleProject(arr) {
+  const projects = sampleProjectProps.map(prop => new Project(prop));
+  projects.forEach(obj => arr.push(obj));
+}
