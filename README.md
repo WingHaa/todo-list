@@ -6,6 +6,8 @@ I also tried to write it using Pubslish-subscribe pattern (Pubsub). It was quite
 
 App come with some default data for show case. Data is keep by using Local Storage.
 
+Preview: [Hosted on Github](https://winghaa.github.io/todo-list/)
+
 ### Feature:
 
 1. Sorting:
