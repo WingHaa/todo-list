@@ -1,6 +1,8 @@
 # Todo list
 
-Built using pure Javascript and Web APIs. App come with some default data for show case. Data is keep by using Local Storage.
+Built using pure Javascript and Tailwind CSS. 
+
+App come with some default data for show case. Data is keep by using Local Storage.
 
 I also tried to write it using Pubslish-subscribe pattern (Pubsub). It was quite painful to write as I forget event naming. Writing application's flow down on paper would have really helped.
 
